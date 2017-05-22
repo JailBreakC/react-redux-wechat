@@ -23,5 +23,5 @@ if (module.hot) {
    render(Routers)
  })
 }
-
-registerServiceWorker();
+// pwa 回头研究
+// registerServiceWorker();

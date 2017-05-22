@@ -1,4 +1,4 @@
-# A Chat Web App Power based on React
+# A Real-Time Chat Web App based on React
 
 ### React + Redux + react-router-dom + react-hot-reloader + Koa + MongoDB
 

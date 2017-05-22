@@ -1,8 +1,8 @@
 {
   "name": "wx.vgee.cn",
   "version": "0.1.0",
-  "private": true,
   "dependencies": {
+    "antd": "^2.10.1",
     "babel-plugin-import": "^1.1.1",
     "bcrypt": "^0.8.7",
     "bluebird": "^3.4.1",
@@ -113,5 +113,8 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "theme": {
+    "primary-color": "#46B942"
   }
 }

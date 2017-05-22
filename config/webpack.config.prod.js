@@ -32,6 +32,23 @@ if (env.stringified['process.env'].NODE_ENV !== '"production"') {
   throw new Error('Production builds must have NODE_ENV=production.');
 }
 
+// antd theme
+const pkgPath = path.join(process.cwd(), 'package.json');
+const pkg = require(pkgPath) || {};
+
+let theme = {};
+if (pkg.theme && typeof(pkg.theme) === 'string') {
+  let cfgPath = pkg.theme;
+  // relative path
+  if (cfgPath.charAt(0) === '.') {
+    cfgPath = resolve(args.cwd, cfgPath);
+  }
+  const getThemeConfig = require(cfgPath);
+  theme = getThemeConfig();
+} else if (pkg.theme && typeof(pkg.theme) === 'object') {
+  theme = pkg.theme;
+}
+
 // Note: defined here because it will be used more than once.
 const cssFilename = 'static/css/[name].[contenthash:8].css';
 
@@ -161,7 +178,11 @@ module.exports = {
         test: /\.(js|jsx)$/,
         include: paths.appSrc,
         loader: require.resolve('babel-loader'),
-        
+        options: {
+          plugins: [
+            ['import', [{ libraryName: "antd", style: true }]],
+          ],
+        }
       },
       // The notation here is somewhat confusing.
       // "postcss" loader applies autoprefixer to our CSS.
@@ -219,7 +240,14 @@ module.exports = {
       {
         test: /\.(less)$/,
         use: ExtractTextPlugin.extract({
-          use:[ 'css-loader','less-loader'],
+          use:[{
+            loader: 'css-loader'
+          }, {
+            loader: 'less-loader',
+            options: {
+              modifyVars: theme
+            }
+          }],
           fallback: 'style-loader',
         }),
       }

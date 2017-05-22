@@ -22,6 +22,23 @@ const publicUrl = '';
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
 
+// antd theme
+const pkgPath = path.join(process.cwd(), 'package.json');
+const pkg = require(pkgPath) || {};
+
+let theme = {};
+if (pkg.theme && typeof(pkg.theme) === 'string') {
+  let cfgPath = pkg.theme;
+  // relative path
+  if (cfgPath.charAt(0) === '.') {
+    cfgPath = resolve(args.cwd, cfgPath);
+  }
+  const getThemeConfig = require(cfgPath);
+  theme = getThemeConfig();
+} else if (pkg.theme && typeof(pkg.theme) === 'object') {
+  theme = pkg.theme;
+}
+
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
@@ -169,7 +186,7 @@ module.exports = {
         loader: require.resolve('babel-loader'),
         options: {
           plugins: [
-            ['import', [{ libraryName: "antd", style: 'css' }]],
+            ['import', [{ libraryName: "antd", style: true }]],
           ],
           // This is a feature of `babel-loader` for webpack (not Babel itself).
           // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -214,7 +231,16 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        use:[ 'style-loader','css-loader','less-loader'],
+        use:[{
+          loader: 'style-loader'
+        }, {
+          loader: 'css-loader'
+        }, {
+          loader: 'less-loader',
+          options: {
+            modifyVars: theme
+          }
+        }]
       },
       // ** STOP ** Are you adding a new loader?
       // Remember to add the new extension(s) to the "file" loader exclusion list.
