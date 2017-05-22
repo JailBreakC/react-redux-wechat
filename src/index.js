@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import {AppContainer} from 'react-hot-loader';
+import Routers from './containers/Routers';
+import { AppContainer } from 'react-hot-loader';
 import registerServiceWorker from './registerServiceWorker';
-import './index.css';
+
+import 'normalize.css';
+import './index.less';
 
 const render = (Component) => {
   ReactDOM.render(
@@ -14,11 +16,11 @@ const render = (Component) => {
   );
 };
 
-render(App)
+render(Routers)
 
 if (module.hot) {
- module.hot.accept('./App', () => {
-   render(App)
+ module.hot.accept('./containers/Routers', () => {
+   render(Routers)
  })
 }
 
