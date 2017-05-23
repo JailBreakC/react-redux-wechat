@@ -1,11 +1,26 @@
 import React from 'react'
 import App from './App'
 import Login from './Login'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import store from '../store'
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
+
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route {...rest} render={props => (
+    store.getState().user.token ? (
+      <Component {...props}/>
+    ) : (
+      <Redirect to={{
+        pathname: '/login',
+        state: { from: props.location }
+      }} />
+    )
+  )}/>
+)
+
 const Routers = () => (
   <Router>
     <div className="wrap">
-      <Route exact path="/" component={App}/>
+      <PrivateRoute exact path="/" component={App}/>
       <Route exact path="/login" component={Login}/>
     </div>
   </Router>

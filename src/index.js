@@ -3,13 +3,11 @@ import ReactDOM from 'react-dom'
 import Routers from './containers/Routers'
 import { Provider } from 'react-redux'
 import { AppContainer } from 'react-hot-loader'
-import createStore from './configureStore'
+import store from './store'
 import registerServiceWorker from './registerServiceWorker'
 
 import 'normalize.css'
 import './index.less'
-
-const store = createStore()
 
 const render = (Component) => {
   ReactDOM.render(

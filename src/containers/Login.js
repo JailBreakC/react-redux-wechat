@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Form, Icon, Input, Button, Checkbox } from 'antd'
+import { Redirect } from 'react-router-dom'
 import * as actions from '../actions'
 import Copyleft from '../components/Copyleft'
 import './Login.less'
@@ -10,6 +11,10 @@ import './Login.less'
 const FormItem = Form.Item
 
 class Login extends Component {
+  state = {
+    redirectToReferrer: false
+  }
+
   static propTypes = {
     user: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired
@@ -28,6 +33,15 @@ class Login extends Component {
   }
 
   render() {
+    const { from } = this.props.location.state || { from: { pathname: '/' } }
+    const { token } = this.props.user
+
+    if (token) {
+      return (
+        <Redirect to={from}/>
+      )
+    }
+
     const { userSelectForm } = this.props.actions
     const { select_form } = this.props.user
     const { getFieldDecorator } = this.props.form
@@ -88,6 +102,7 @@ const connectedLogin = connect(
   mapDispatchToProps
 )(Login)
 
+// antd 表单验证绑定操作
 const WrappedNormalLoginForm = Form.create()(connectedLogin)
 
 export default WrappedNormalLoginForm
