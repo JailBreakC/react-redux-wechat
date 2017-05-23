@@ -43,6 +43,7 @@ module.exports = {
         });
     },
     verifyUser: function *(nickname,password,cb) {
+        console.log('verify')
         let user = yield User.findOneUser({nickname: nickname});
         if(!user) {
             return cb({
@@ -52,6 +53,7 @@ module.exports = {
             });
         }
         let resault = yield bluebird.promisify(bcrypt.compare)(password,user.password);
+        console.log(resault)
         if(resault){ 
             let verify = jwt.sign({
                     user: nickname,

@@ -18,6 +18,7 @@ module.exports = function (io) {
         socket.on('login',(info,cb) => {
             console.log(info.nickname + 'login');
             co(user.verifyUser(info.nickname,info.password,cb)).catch((err) =>{
+                console.log(err)
                 callbackError(cb,err);
             });
         })

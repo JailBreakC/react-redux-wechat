@@ -26,7 +26,9 @@ const userSignupSucceed = token => {
 export const userLogin = user => dispatch => {
   console.log(user)
   return new Promise((resolve,reject) => {
+    console.log('login')
     socket.emit('login', user, (info) => {
+    console.log('login info')
       console.log(info)
       dispatch(userLoginSucceed(info))
       resolve(info)

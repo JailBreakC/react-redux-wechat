@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Panel from './Panel'
 import ChatContent from './ChatContent'
 import Copyleft from '../components/Copyleft'
-
 import './App.less';
 
 class App extends Component {
