@@ -8,3 +8,19 @@
 * react-hot-reloader: A powerful dev tool whitch can tweak React components in real time!
 * Koa: A expressive HTTP middleware framework for node.js to make web applications and APIs more enjoyable to write.
 * MongoDB: An open-source, document database designed for ease of development and scaling.
+
+### Develop
+
+1. Install package
+
+`npm install`
+
+2. Start frontend dev-server
+
+`npm start`
+
+3. Stert backend socket server
+
+`npm run start-server`
+
+
