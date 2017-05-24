@@ -1,16 +1,24 @@
 import io from 'socket.io-client'
 import store from 'storejs'
-import * as types from '../constants/ActionTypes'
 import API from '../config/api'
 
-export const socket = io(API, {'force new connection': true})
+export const socket = io(API, { 'force new connection': true })
 
-export const userSelectForm = form => ({type: types.USER_SELECT_FORM, form})
+export const USER_SELECT_FORM = 'USER_SELECT_FORM'
+export const USER_LOGIN_SUCCEED = 'USER_LOGIN_SUCCEED'
+export const USER_SIGNUP_SUCCEED = 'USER_SIGNUP_SUCCEED'
+
+const getToken = function() {
+  return store('chatToken')
+}
+
+export const userSelectForm = form => ({ type: USER_SELECT_FORM, form })
+
 
 const userLoginSucceed = token => {
   store('chatToken', token.jwt)
   return {
-    type: types.USER_LOGIN_SUCCEED, 
+    type: USER_LOGIN_SUCCEED,
     token
   }
 }
@@ -18,17 +26,17 @@ const userLoginSucceed = token => {
 const userSignupSucceed = token => {
   store('chatToken', token.jwt)
   return {
-    type: types.USER_SIGNUP_SUCCEED, 
+    type: USER_SIGNUP_SUCCEED,
     token
   }
 }
 
 export const userLogin = user => dispatch => {
   console.log(user)
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve, reject) => {
     console.log('login')
     socket.emit('login', user, (info) => {
-    console.log('login info')
+      console.log('login info')
       console.log(info)
       dispatch(userLoginSucceed(info))
       resolve(info)
@@ -38,7 +46,7 @@ export const userLogin = user => dispatch => {
 
 export const userSignup = user => dispatch => {
   console.log(user)
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve, reject) => {
     socket.emit('signUp', user, (info) => {
       console.log(info)
       dispatch(userSignupSucceed(info))
@@ -46,3 +54,23 @@ export const userSignup = user => dispatch => {
     })
   })
 }
+
+export const SET_ROOM_LIST = 'SET_ROOM_LIST'
+
+const setRoomList = data => ({type: SET_ROOM_LIST, data})
+
+export const getRoomList = () => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      socket.emit('getRoomList', getToken(), (body) => {
+        if (body.isError) {
+          reject(body);
+        } else {
+          dispatch(setRoomList(body))
+          resolve(body);
+        }
+      })
+    })
+  }
+}
+

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
+import { reduxConnect } from '../helpers'
 import Panel from './Panel'
 import ChatContent from './ChatContent'
 import Copyleft from '../components/Copyleft'
@@ -6,6 +8,11 @@ import './App.less';
 
 class App extends Component {
   static propTypes = {
+    actions: PropTypes.object.isRequired,
+  }
+
+  componentDidMount() {
+    this.props.actions.getRoomList()
   }
 
   render() {
@@ -21,4 +28,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default reduxConnect(App);

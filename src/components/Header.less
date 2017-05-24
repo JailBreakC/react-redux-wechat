@@ -42,10 +42,17 @@
       .opt {
         display: inline-block;
         vertical-align: top;
-      }
-      .opt {
-        display: inline-block;
-        vertical-align: top;
+        .iconfont {
+          font-size: 22px;
+          color: #7d7d7d;
+          transition: color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+        &:hover {
+          .iconfont {
+            font-size: 22px;
+            color: @primary-color;
+          }
+        }
       }
     }
   }

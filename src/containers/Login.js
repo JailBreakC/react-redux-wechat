@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
 import { Form, Icon, Input, Button, Checkbox } from 'antd'
 import { Redirect } from 'react-router-dom'
-import * as actions from '../actions'
+import { reduxConnect } from '../helpers'
 import Copyleft from '../components/Copyleft'
 import './Login.less'
 
@@ -89,18 +87,7 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.user
-})
-
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(actions, dispatch)
-})
-
-const connectedLogin = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Login)
+const connectedLogin = reduxConnect(Login)
 
 // antd 表单验证绑定操作
 const WrappedNormalLoginForm = Form.create()(connectedLogin)

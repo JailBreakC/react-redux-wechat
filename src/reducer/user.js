@@ -3,7 +3,7 @@ import {
   USER_SELECT_FORM,
   USER_LOGIN_SUCCEED,
   USER_SIGNUP_SUCCEED,
-} from '../constants/ActionTypes'
+} from '../actions'
 
 const initialState = {
   select_form: 'login',

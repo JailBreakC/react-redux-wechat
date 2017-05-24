@@ -6,12 +6,12 @@ class Header extends Component {
     return (
       <div className="header">
         <div className="avatar">
-            <img className="img" src="http://static.insta360.com/assets/operation/0054/058394960c1cbeae74475c3fba8ac3d7/doge.png" onClick="" alt="" />
+            <img className="img" src="https://static.insta360.com/assets/operation/0054/c9916bbe2ef5ee76d22b2ae990e498d3/WechatIMG1.jpeg" onClick="" alt="" />
         </div>
         <div className="info">
             <h3 className="nickname">
                 <span className="display_name ng-binding">Bieber陈加贝</span>
-                <a className="opt" onClick=""><i className="web_wechat_add"></i></a>
+                <a className="opt" onClick=""><i className="iconfont icon-guanji2"></i></a>
             </h3>
         </div>
       </div>
