@@ -79,7 +79,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "start-server": "nodemon server/bin/www",
+    "start-server": "nodemon --watch server server/bin/www",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
