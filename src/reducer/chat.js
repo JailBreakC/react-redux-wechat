@@ -1,9 +1,11 @@
 import {
   SET_ROOM_LIST,
+  SET_ACTIIVE_LIST
 } from '../actions'
 
 const initialState = {
-  roomList: []
+  roomList: {},
+  activeList: {}
 }
 
 export default function user (state = initialState, action) {
@@ -12,6 +14,11 @@ export default function user (state = initialState, action) {
       return {
         ...state,
         roomList: action.data
+      }
+    case SET_ACTIIVE_LIST:
+      return {
+        ...state,
+        activeList: action.data
       }
     default:
       return state

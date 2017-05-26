@@ -11,8 +11,14 @@ class App extends Component {
     actions: PropTypes.object.isRequired,
   }
 
+  initApp = () => {
+    const { getActiveList, getInitUserInfo } = this.props.actions
+    getActiveList()
+    getInitUserInfo()
+  }
+
   componentDidMount() {
-    this.props.actions.getRoomList()
+    this.initApp()
   }
 
   render() {

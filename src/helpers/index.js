@@ -11,6 +11,7 @@ export const reduxConnect = (Component) => {
   const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(actions, dispatch)
   })
+
   return connect(
     mapStateToProps,
     mapDispatchToProps

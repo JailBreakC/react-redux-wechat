@@ -3,11 +3,13 @@ import {
   USER_SELECT_FORM,
   USER_LOGIN_SUCCEED,
   USER_SIGNUP_SUCCEED,
+  USER_GET_INFO_SUCCEED
 } from '../actions'
 
 const initialState = {
   select_form: 'login',
-  token: storage('chatToken')
+  token: storage('chatToken'),
+  info: {},
 }
 
 export default function user (state = initialState, action) {
@@ -17,6 +19,7 @@ export default function user (state = initialState, action) {
         ...state,
         select_form: action.form
       }
+
     case USER_LOGIN_SUCCEED:
     case USER_SIGNUP_SUCCEED:
       console.log('action')
@@ -25,6 +28,13 @@ export default function user (state = initialState, action) {
         ...state,
         token: action.token.jwt
       }
+
+    case USER_GET_INFO_SUCCEED:
+      return {
+        ...state,
+        info: action.user
+      }
+
     default:
       return state
   }

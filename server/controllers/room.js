@@ -128,6 +128,8 @@ module.exports = {
             let user = yield User.findOne({nickname: decode.user}).populate('rooms');
             if(user){
                 let userList = listUtil.getRoomList(user.rooms,'name');
+                console.log(user.rooms)
+                console.log(userList)
                 cb(userList);
             }
         } else{

@@ -59,11 +59,11 @@ module.exports = {
             let user = yield User.findOne({nickname:decode.user});
             if(user){
                 let lastOnlineTime = user.lastOnlineTime;
-                let userList = yield Private.find({timestamp: {$gt: lastOnlineTime},to: user.nickname},null,{sort:'-timestamp'}).populate('from');
+                let userList = yield Private.find({to: user.nickname},null,{sort:'-timestamp'}).populate('from');
                 let roomList = yield User.findOne({nickname: user.nickname}).populate({path: 'rooms',match: {lastMessage: {$gt: lastOnlineTime}}});
                 roomList = roomList.rooms;
                 let roomNameArr = listUtil.getRoomNameArr(roomList);
-                let histories = yield History.find({timestamp: {$gt: lastOnlineTime}, room: {$in: roomNameArr}},null,{sort:'-timestamp',limit:20}).populate('owner');
+                let histories = yield History.find({room: {$in: roomNameArr}},null,{sort:'-timestamp',limit:20}).populate('owner');
                 let activeRoom  = listUtil.getRoomList(roomList);
                 let activeUser = listUtil.getUserList(userList);
                 let activeList = Object.assign({},activeRoom,activeUser);
