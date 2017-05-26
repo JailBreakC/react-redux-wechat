@@ -70,15 +70,15 @@ export const getInitUserInfo = () => {
       }, (body) => {
         console.log(body)
         if (body.isError) {
-          alert('用户已经在线');
-          history.push('/login');
+          alert('用户已经在线')
+          history.push('/login')
         } else {
-          body.token = token;
+          body.token = token
           dispatch({
             type: USER_GET_INFO_SUCCEED,
             user: body
-          });
-          resolve(body);
+          })
+          resolve(body)
         }
       })
     })

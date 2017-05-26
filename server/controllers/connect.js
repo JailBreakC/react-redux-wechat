@@ -60,7 +60,7 @@ module.exports = {
             if(user){
                 let lastOnlineTime = user.lastOnlineTime;
                 let userList = yield Private.find({to: user.nickname},null,{sort:'-timestamp'}).populate('from');
-                let roomList = yield User.findOne({nickname: user.nickname}).populate({path: 'rooms',match: {lastMessage: {$gt: lastOnlineTime}}});
+                let roomList = yield User.findOne({nickname: user.nickname}).populate({path: 'rooms'});
                 roomList = roomList.rooms;
                 let roomNameArr = listUtil.getRoomNameArr(roomList);
                 let histories = yield History.find({room: {$in: roomNameArr}},null,{sort:'-timestamp',limit:20}).populate('owner');

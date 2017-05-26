@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
+import _ from 'lodash'
+import PropTypes from 'prop-types'
 import { Scrollbars } from 'react-custom-scrollbars';
 import './ChatList.less'
 
 class ChatList extends Component {
+  static propTypes = {
+    activeList: PropTypes.object.isRequired
+  }
   ajustListHeight = () => {
     let listHeight = document.getElementsByClassName('panel')[0].clientHeight - 153
     console.log(listHeight)
@@ -15,20 +20,20 @@ class ChatList extends Component {
   componentWillUnmount() {
     window.removeEventListener('resize', this.ajustListHeight)
   }
-  renderChatItem () {
+  renderChatItem (val, key) {
     return (
-      <div className="chat-item-ct">
+      <div className="chat-item-ct" key={key}>
         <div className="chat_item slide-left top" >
             <div className="ext">
                 <p className="attr ng-binding">11:51</p>
             </div>
             <div className="avatar">
-                <img className="img" src="https://static.insta360.com/assets/operation/0054/c9916bbe2ef5ee76d22b2ae990e498d3/WechatIMG1.jpeg" alt="" />
+                <img className="img" src={val.avatar} alt="" />
             </div>
 
             <div className="info">
                 <h3 className="nickname">
-                    <span className="nickname_text ng-binding">文件传输助手</span>
+                    <span className="nickname_text ng-binding">{val.roomName}</span>
                 </h3>
                 <p className="msg">
                   你好呀
@@ -39,11 +44,12 @@ class ChatList extends Component {
     )
   }
   render() {
+    const { activeList } = this.props.activeList
     return (
       <div className="chat-list" ref={chatList => this.chatList = chatList}>
         <Scrollbars>
-          {[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1].map(index => {
-            return this.renderChatItem()
+          { _.map(activeList, (val, key) => {
+            return this.renderChatItem(val, key)
           })}
         </Scrollbars>
       </div>
