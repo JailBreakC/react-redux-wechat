@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import { Scrollbars } from 'react-custom-scrollbars';
 import './ChatList.less'
@@ -21,11 +22,26 @@ class ChatList extends Component {
     window.removeEventListener('resize', this.ajustListHeight)
   }
   renderChatItem (val, key) {
+    const { roomHistories, privateHistories } = this.props.activeList
+    console.log(this.props.activeList)
+    let lastHistory
+    if(val.isPrivate) {
+      console.log(privateHistories)
+      const message = privateHistories[key]
+      console.log(message)
+      lastHistory = message[message.length - 1]
+    } else {
+      const message = roomHistories[key]
+      lastHistory = message[message.length - 1]
+    }
+    lastHistory.time = moment(lastHistory.timestamp).format('HH:mm')
+    console.log('lastHistory', lastHistory)
+
     return (
       <div className="chat-item-ct" key={key}>
         <div className="chat_item slide-left top" >
             <div className="ext">
-                <p className="attr ng-binding">11:51</p>
+                <p className="attr ng-binding">{ lastHistory.time }</p>
             </div>
             <div className="avatar">
                 <img className="img" src={val.avatar} alt="" />
@@ -36,7 +52,7 @@ class ChatList extends Component {
                     <span className="nickname_text ng-binding">{val.roomName}</span>
                 </h3>
                 <p className="msg">
-                  你好呀
+                  { lastHistory.content }
                 </p>
             </div>
         </div>
