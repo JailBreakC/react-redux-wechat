@@ -1,4 +1,5 @@
 import io from 'socket.io-client'
+import Promise from 'promise'
 import history from '../history'
 import store from 'storejs'
 import API from '../config/api'
@@ -36,12 +37,8 @@ const userSignupSucceed = token => {
 }
 
 export const userLogin = user => dispatch => {
-  console.log(user)
   return new Promise((resolve, reject) => {
-    console.log('login')
     socket.emit('login', user, (info) => {
-      console.log('login info')
-      console.log(info)
       dispatch(userLoginSucceed(info))
       resolve(info)
     })
@@ -49,75 +46,179 @@ export const userLogin = user => dispatch => {
 }
 
 export const userSignup = user => dispatch => {
-  console.log(user)
   return new Promise((resolve, reject) => {
     socket.emit('signUp', user, (info) => {
-      console.log(info)
       dispatch(userSignupSucceed(info))
       resolve(info)
     })
   })
 }
 
-export const getInitUserInfo = () => {
-  return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      const token = getToken()
-      const device = browser.versions.mobile ? 'mobile' : 'PC';
-      socket.emit('getInfo', {
-        token,
-        device
-      }, (body) => {
-        console.log(body)
-        if (body.isError) {
-          alert('用户已经在线')
-          history.push('/login')
-        } else {
-          body.token = token
-          dispatch({
-            type: USER_GET_INFO_SUCCEED,
-            user: body
-          })
-          resolve(body)
-        }
-      })
+export const getInitUserInfo = () => (dispatch, getState) => {
+  return new Promise((resolve) => {
+    const token = getToken()
+    const device = browser.versions.mobile ? 'mobile' : 'PC'
+    socket.emit('getInfo', {
+      token,
+      device
+    }, (body) => {
+      if (body.isError) {
+        alert('用户已经在线')
+        history.push('/login')
+      } else {
+        body.token = token
+        dispatch({
+          type: USER_GET_INFO_SUCCEED,
+          user: body
+        })
+        resolve(body)
+      }
     })
-  }
+  })
 }
 
 export const SET_ROOM_LIST = 'SET_ROOM_LIST'
 export const SET_ACTIIVE_LIST = 'SET_ACTIIVE_LIST'
+export const UPDATE_PRIVATE_HISTORIES = 'UPDATE_PRIVATE_HISTORIES'
+export const UPDATE_ROOM_HISTORIES = 'UPDATE_ROOM_HISTORIES'
+
+const LOAD_MESSAGE_LIMIT = 15
 
 const setRoomList = data => ({ type: SET_ROOM_LIST, data })
 
-export const getRoomList = () => {
-  return (dispatch) => {
-    return new Promise((resolve, reject) => {
-      socket.emit('getRoomList', getToken(), (body) => {
-        if (body.isError) {
-          reject(body);
-        } else {
-          dispatch(setRoomList(body))
-          resolve(body);
-        }
-      })
+export const getRoomList = () => dispatch => {
+  return new Promise((resolve, reject) => {
+    socket.emit('getRoomList', getToken(), (body) => {
+      if (body.isError) {
+        reject(body)
+      } else {
+        dispatch(setRoomList(body))
+        resolve(body)
+      }
     })
-  }
+  })
 }
 
 const setActiveList = data => ({ type: SET_ACTIIVE_LIST, data })
 
-export const getActiveList = () => {
-  return (dispatch) => {
-    return new Promise((resolve, reject) => {
-      socket.emit('getActiveList', getToken(), (body) => {
-        if (body.isError) {
-          reject(body);
-        } else {
-          dispatch(setActiveList(body))
-          resolve(body);
-        }
-      })
+export const getActiveList = () => dispatch => {
+  return new Promise((resolve, reject) => {
+    socket.emit('getActiveList', getToken(), (body) => {
+      if (body.isError) {
+        reject(body)
+      } else {
+        dispatch(setActiveList(body))
+        resolve(body)
+      }
     })
+  })
+}
+
+const updatePrivateHistory = (fromUser, histories) => ({ 
+  type: UPDATE_PRIVATE_HISTORIES,
+  histories,
+  fromUser
+})
+
+export const getPrivateHistory = info => (dispatch, getState) => {
+  return new Promise((resolve, reject) => {
+    if (!info) {
+      const state = getState()
+      const { user, chat } = state
+      const fromUser = user.info.curRoom
+      const toUser = user.info.nickname
+      const messages = chat.privateMessages[fromUser] ? chat.privateMessages[fromUser] : []
+      info = {
+        fromUser: fromUser,
+        toUser: toUser,
+        timestamp: messages.length > 0 ? messages[0].timestamp : Date.now(),
+        limit: LOAD_MESSAGE_LIMIT
+      }
+    }
+    console.log(info)
+    socket.emit('getPrivateHistory', info, (body) => {
+      if (body.isError) {
+        reject(body)
+        alert(body.errMsg)
+        console.error(body)
+      } else {
+        const histories = body.histories || []
+        const isloadAll = histories.length < LOAD_MESSAGE_LIMIT
+        console.log(histories)
+        dispatch(updatePrivateHistory(info.fromUser, histories))
+        resolve(isloadAll)
+      }
+    })
+  })
+}
+
+const addHistoryMessage = (roomName, histories) => ({
+  type: UPDATE_ROOM_HISTORIES,
+  roomName,
+  histories
+})
+
+export const getRoomHistory = info => (dispatch, getState) => {
+  return new Promise((resolve, reject) => {
+    if (!info) {
+      const state = getState()
+      const { user, chat } = state
+      let roomName = user.info.curRoom
+      let messages = chat.roomMessages[roomName] ? chat.roomMessages[roomName] : []
+      info = {
+        roomName: roomName,
+        timestamp: messages.length > 0 ? messages[0].timestamp : Date.now(),
+        limit: LOAD_MESSAGE_LIMIT
+      }
+    }
+    socket.emit('getRoomHistory', info, (body) => {
+      if (body.isError) {
+        alert('error')
+        console.error(body)
+        reject(body)
+      } else {
+        let histories = body.histories || []
+        let isloadAll = histories.length < LOAD_MESSAGE_LIMIT
+        dispatch(addHistoryMessage(info.roomName, histories))
+        resolve(isloadAll)
+      }
+    })
+  })
+}
+
+export const getHistory = () => (dispatch, getState) => {
+  const state = getState()
+  state.user.info.isPrivate ? dispatch(getPrivateHistory()) : dispatch(getRoomHistory())
+}
+
+export const UPDATE_USER_INFO = 'UPDATE_USER_INFO'
+export const SWITCH_CHAT_ROOM = 'SWITCH_CHAT_ROOM'
+
+export const updateUserInfo = info => ({type: UPDATE_USER_INFO, info})
+
+export const switchChatRoom = roomInfo => (dispatch, getState) => {
+  const state = getState()
+  const { user, chat } = state
+  const curRoom = roomInfo.curRoom
+  console.log(roomInfo)
+  let info = {}
+  if(roomInfo.isPrivate) {
+    const messages = chat.privateMessages[curRoom] ? chat.privateMessages[curRoom] : []
+    info = {
+      fromUser: curRoom,
+      toUser: user.info.nickname,
+      timestamp: messages.length > 0 ? messages[0].timestamp : Date.now(),
+      limit: LOAD_MESSAGE_LIMIT
+    }
+    dispatch(getPrivateHistory(info))
+  } else {
+    let messages = chat.roomMessages[curRoom] ? chat.roomMessages[curRoom] : []
+    info = {
+      roomName: curRoom,
+      timestamp: messages.length > 0 ? messages[0].timestamp : Date.now(),
+      limit: LOAD_MESSAGE_LIMIT
+    }
+    dispatch(getRoomHistory(info))
   }
+  dispatch(updateUserInfo(roomInfo))
 }

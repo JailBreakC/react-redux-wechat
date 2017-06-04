@@ -1,16 +1,21 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import './Header.less'
 
 class Header extends Component {
+  static propTypes = {
+    info: PropTypes.object.isRequired
+  }
   render() {
+    const { info } = this.props
     return (
       <div className="header">
         <div className="avatar">
-            <img className="img" src="https://static.insta360.com/assets/operation/0054/c9916bbe2ef5ee76d22b2ae990e498d3/WechatIMG1.jpeg" onClick="" alt="" />
+            <img className="img" src={info.avatar} onClick="" alt="" />
         </div>
         <div className="info">
             <h3 className="nickname">
-                <span className="display_name ng-binding">Bieber陈加贝</span>
+                <span className="display_name ng-binding">{info.nickname}</span>
                 <a className="opt" onClick=""><i className="iconfont icon-guanji2"></i></a>
             </h3>
         </div>

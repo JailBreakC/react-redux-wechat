@@ -11,7 +11,8 @@ const TabPane = Tabs.TabPane
 class Panel extends Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
-    chat: PropTypes.object.isRequired
+    chat: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
   }
 
   onTabChange = () => {
@@ -19,14 +20,14 @@ class Panel extends Component {
   }
 
   render() {
-    const { chat } = this.props
+    const { chat, user, actions } = this.props
     return (
       <div className="panel">
-        <Header />
+        <Header info={user.info} />
         <Search />
         <Tabs defaultActiveKey="1" onChange={this.onTabChange} size="small">
           <TabPane tab={<i className="iconfont icon-liaotian" />} key="1">
-            <ChatList activeList={chat.activeList}/>
+            <ChatList activeList={chat.activeList} actions={actions} user={user}/>
           </TabPane>
           <TabPane tab={<i className="iconfont icon-wenzhang" />} key="2">Content of Tab Pane 2</TabPane>
           <TabPane tab={<i className="iconfont icon-lianxiren" />} key="3">Content of Tab Pane 3</TabPane>

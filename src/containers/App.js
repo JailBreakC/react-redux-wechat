@@ -4,6 +4,7 @@ import { reduxConnect } from '../helpers'
 import Panel from './Panel'
 import ChatContent from './ChatContent'
 import Copyleft from '../components/Copyleft'
+import Promise from 'promise'
 import './App.less';
 
 class App extends Component {
@@ -12,9 +13,11 @@ class App extends Component {
   }
 
   initApp = () => {
-    const { getActiveList, getInitUserInfo } = this.props.actions
-    getActiveList()
-    getInitUserInfo()
+    const { getActiveList, getInitUserInfo, getHistory } = this.props.actions
+    Promise.all([getActiveList(), getInitUserInfo()])
+      .then(() => {
+        getHistory()
+      })
   }
 
   componentDidMount() {

@@ -3,7 +3,8 @@ import {
   USER_SELECT_FORM,
   USER_LOGIN_SUCCEED,
   USER_SIGNUP_SUCCEED,
-  USER_GET_INFO_SUCCEED
+  USER_GET_INFO_SUCCEED,
+  UPDATE_USER_INFO
 } from '../actions'
 
 const initialState = {
@@ -22,8 +23,6 @@ export default function user (state = initialState, action) {
 
     case USER_LOGIN_SUCCEED:
     case USER_SIGNUP_SUCCEED:
-      console.log('action')
-      console.log(action)
       return {
         ...state,
         token: action.token.jwt
@@ -33,6 +32,14 @@ export default function user (state = initialState, action) {
       return {
         ...state,
         info: action.user
+      }
+    case UPDATE_USER_INFO:
+      return {
+        ...state,
+        info: {
+          ...state.info,
+          ...action.info
+        }
       }
 
     default:

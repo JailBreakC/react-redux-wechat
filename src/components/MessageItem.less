@@ -1,0 +1,109 @@
+.message {
+  margin-bottom: 16px;
+  float: left;
+  width: 100%;
+  &.me {
+    float: right;
+    text-align: right;
+    clear: right;
+    .avatar {
+      float: right;
+    }
+  }
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 2px;
+    float: left;
+    cursor: pointer;
+  }
+  .content {
+    overflow: hidden;
+  }
+  .bubble {
+    max-width: 500px;
+    min-height: 1em;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    text-align: left;
+    font-size: 14px;
+    border-radius: 3px;
+    margin: 0 10px;
+    &.bubble_default {
+      background-color: #fff;
+    }
+    &.bubble_primary {
+      background-color: #b2e281;
+      &.right.arrow_primary:before,
+      &.right:after {
+        border-left-color: #b2e281;
+        border-left-width: 4px;
+      }
+    }
+    &.left:after {
+      border-right-color: #fff;
+      border-right-width: 4px;
+    }
+    &.left:after,
+    &.left:before {
+      right: 100%;
+    }
+    &.right:after,
+    &.right:before {
+      left: 100%;
+    }
+    &:after,
+    &:before {
+      position: absolute;
+      top: 14px;
+      border: 6px solid transparent;
+      content: " ";
+    }
+  }
+  .bubble_cont {
+    word-wrap: break-word;
+    word-break: break-all;
+    min-height: 25px;
+    .plain {
+      padding: 9px 13px;
+      .ico_fail {
+        position: absolute;
+        right: 100%;
+        top: 50%;
+        margin-top: -11px;
+        margin-right: 9px;
+        cursor: pointer;
+      }
+      .ico_loading {
+        position: absolute;
+        right: 100%;
+        top: 50%;
+        margin-top: -7px;
+        margin-right: 13px;
+      }
+    }
+    img {
+      vertical-align: middle;
+    }
+  }
+  pre {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    white-space: pre-wrap;
+    word-break: normal;
+  }
+  .message_system {
+    text-align: center;
+    margin: 10px auto;
+    max-width: 50%;
+    .content {
+      display: inline-block;
+      font-size: 12px;
+      padding: 1px 18px;
+      color: #b2b2b2;
+      border-radius: 2px;
+    }
+  }
+}
