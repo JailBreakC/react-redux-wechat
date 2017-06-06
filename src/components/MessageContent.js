@@ -9,6 +9,9 @@ class MessageContent extends Component {
     user: PropTypes.object.isRequired,
     chat: PropTypes.object.isRequired,
   }
+  componentDidUpdate(prevProps, prevState) {
+    this.scrollbar.scrollToBottom()
+  }
   render() {
     const { user, chat } = this.props
     let messages = user.info.isPrivate 
@@ -17,7 +20,7 @@ class MessageContent extends Component {
     messages = messages ? messages : []
     return (
       <div className="message-content">
-        <Scrollbars>
+        <Scrollbars ref={(bar) => {this.scrollbar = bar}} autoHide>
           <div className="top-placeholder" style={{'height': '0px'}}></div>
           {
             messages.map(function(message) {

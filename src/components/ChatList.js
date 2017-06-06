@@ -39,12 +39,17 @@ class ChatList extends Component {
     const { roomHistories, privateHistories } = this.props.activeList
     let lastHistory
     if(val.isPrivate) {
-      const message = privateHistories[key]
+      const message = privateHistories[key] || []
       lastHistory = message[message.length - 1]
     } else {
-      const message = roomHistories[key]
+      const message = roomHistories[key] || []
       lastHistory = message[message.length - 1]
     }
+
+    if(!lastHistory) {
+      return null
+    }
+
     lastHistory.time = moment(lastHistory.timestamp).format('HH:mm')
 
     return (
