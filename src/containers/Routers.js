@@ -2,6 +2,7 @@ import React from 'react'
 import App from './App'
 import Login from './Login'
 import store from '../store'
+import { reduxConnect } from '../helpers'
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -17,12 +18,15 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   )}/>
 )
 
-const Routers = () => (
-  <Router>
-    <div className="wrap">
-      <PrivateRoute exact path="/" component={App}/>
-      <Route exact path="/login" component={Login}/>
-    </div>
-  </Router>
-)
-export default Routers
+const Routers = () => {
+  return  (
+    <Router>
+      <div className="wrap">
+        <PrivateRoute exact path="/" component={App}/>
+        <Route exact path="/login" component={Login}/>
+      </div>
+    </Router>
+  )
+}
+
+export default reduxConnect(Routers);

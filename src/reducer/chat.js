@@ -2,7 +2,8 @@ import {
   SET_ROOM_LIST,
   SET_ACTIIVE_LIST,
   UPDATE_PRIVATE_HISTORIES,
-  UPDATE_ROOM_HISTORIES
+  UPDATE_ROOM_HISTORIES,
+  USER_LOGOUT
 } from '../actions'
 
 const initialState = {
@@ -46,6 +47,10 @@ export default function user (state = initialState, action) {
         }
       }
     }
+    case USER_LOGOUT:
+      return {
+        ...initialState
+      }
     default:
       return state
   }

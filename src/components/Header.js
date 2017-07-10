@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from "react-router-dom";
 import PropTypes from 'prop-types'
 import './Header.less'
 
@@ -6,8 +7,12 @@ class Header extends Component {
   static propTypes = {
     info: PropTypes.object.isRequired
   }
+  handleLogOut = () => {
+    const { history, actions } = this.props
+    actions.userLogout()
+  }
   render() {
-    const { info } = this.props
+    const { info, actions } = this.props
     return (
       <div className="header">
         <div className="avatar">
@@ -16,7 +21,7 @@ class Header extends Component {
         <div className="info">
             <h3 className="nickname">
                 <span className="display_name ng-binding">{info.nickname}</span>
-                <a className="opt" onClick=""><i className="iconfont icon-guanji2"></i></a>
+                <a className="opt" onClick={this.handleLogOut}><i className="iconfont icon-guanji2"></i></a>
             </h3>
         </div>
       </div>
@@ -24,4 +29,4 @@ class Header extends Component {
   }
 }
 
-export default Header
+export default withRouter(Header)

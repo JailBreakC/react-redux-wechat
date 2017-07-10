@@ -1,6 +1,5 @@
 import io from 'socket.io-client'
 import Promise from 'promise'
-import history from '../history'
 import store from 'storejs'
 import API from '../config/api'
 import browser from '../helpers/browser'
@@ -10,6 +9,7 @@ export const socket = io(API, { 'force new connection': true })
 export const USER_SELECT_FORM = 'USER_SELECT_FORM'
 export const USER_LOGIN_SUCCEED = 'USER_LOGIN_SUCCEED'
 export const USER_SIGNUP_SUCCEED = 'USER_SIGNUP_SUCCEED'
+export const USER_LOGOUT = 'USER_LOGOUT'
 export const USER_GET_INFO = 'USER_GET_INFO'
 export const USER_GET_INFO_SUCCEED = 'USER_GET_INFO_SUCCEED'
 
@@ -17,8 +17,11 @@ const getToken = function() {
   return store('chatToken')
 }
 
-export const userSelectForm = form => ({ type: USER_SELECT_FORM, form })
+const removeToken = function() {
+  return store.remove('chatToken')
+}
 
+export const userSelectForm = form => ({ type: USER_SELECT_FORM, form })
 
 const userLoginSucceed = token => {
   store('chatToken', token.jwt)
@@ -45,6 +48,12 @@ export const userLogin = user => dispatch => {
   })
 }
 
+export const userLogout = () => {
+  return {
+    type: USER_LOGOUT,
+  }
+}
+
 export const userSignup = user => dispatch => {
   return new Promise((resolve, reject) => {
     socket.emit('signUp', user, (info) => {
@@ -64,7 +73,7 @@ export const getInitUserInfo = () => (dispatch, getState) => {
     }, (body) => {
       if (body.isError) {
         alert('用户已经在线')
-        history.push('/login')
+        dispatch(userLogout())
       } else {
         body.token = token
         dispatch({

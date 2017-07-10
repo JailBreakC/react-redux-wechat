@@ -3,6 +3,7 @@ import {
   USER_SELECT_FORM,
   USER_LOGIN_SUCCEED,
   USER_SIGNUP_SUCCEED,
+  USER_LOGOUT,
   USER_GET_INFO_SUCCEED,
   UPDATE_USER_INFO
 } from '../actions'
@@ -11,6 +12,10 @@ const initialState = {
   select_form: 'login',
   token: storage('chatToken'),
   info: {},
+}
+
+const removeToken = function() {
+  return storage.remove('chatToken')
 }
 
 export default function user (state = initialState, action) {
@@ -41,7 +46,13 @@ export default function user (state = initialState, action) {
           ...action.info
         }
       }
-
+    case USER_LOGOUT:
+      removeToken()
+      return {
+        ...state,
+        token: '',
+        info: {}
+      }
     default:
       return state
   }

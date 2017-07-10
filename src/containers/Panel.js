@@ -23,7 +23,7 @@ class Panel extends Component {
     const { chat, user, actions } = this.props
     return (
       <div className="panel">
-        <Header info={user.info} />
+        <Header info={user.info} actions={actions}/>
         <Search />
         <Tabs defaultActiveKey="1" onChange={this.onTabChange} size="small">
           <TabPane tab={<i className="iconfont icon-liaotian" />} key="1">
